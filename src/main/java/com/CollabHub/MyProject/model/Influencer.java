@@ -2,33 +2,49 @@ package com.CollabHub.MyProject.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name="Influencer_Profile")
-public class Influencer extends User{
+public class Influencer{
     @Id
-    @Column(name = "id")
-    private long id;
+    @Column(name = "influencer_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @OneToOne
-    @MapsId
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id",referencedColumnName = "id")
     private User user;
 
-    private String niche;
-    private int followerCount;
-    private double engagementRate;
+    @OneToMany(mappedBy = "influencer", cascade = CascadeType.ALL)
+    private List<CampaignApplication> applications = new ArrayList<>();
 
-    @Override
-    public long id() {
+    @ManyToMany(mappedBy = "influencers")
+    private List<Niche> niches = new ArrayList<>();
+
+    @OneToOne(mappedBy = "influencer")
+    private SocialMediaProfile socialMediaProfile;
+
+    @ManyToMany(mappedBy = "followingInfluencers")
+    private List<Campaign> campaigns = new ArrayList<>();
+
+    public Influencer() {}
+
+    public Influencer(User user) {
+        this.user = user;
+    }
+
+    // Getters and Setters
+    public Long getId() {
         return id;
     }
 
-    @Override
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public User user() {
+    public User getUser() {
         return user;
     }
 
@@ -36,27 +52,75 @@ public class Influencer extends User{
         this.user = user;
     }
 
-    public String niche() {
-        return niche;
+    public List<CampaignApplication> getApplications() {
+        return applications;
     }
 
-    public void setNiche(String niche) {
-        this.niche = niche;
+    public void setApplications(List<CampaignApplication> applications) {
+        this.applications = applications;
     }
 
-    public int followerCount() {
-        return followerCount;
+    public List<Niche> getNiches() {
+        return niches;
     }
 
-    public void setFollowerCount(int followerCount) {
-        this.followerCount = followerCount;
+    public void setNiches(List<Niche> niches) {
+        this.niches = niches;
     }
 
-    public double engagementRate() {
-        return engagementRate;
+    public SocialMediaProfile getSocialMediaProfile() {
+        return socialMediaProfile;
     }
 
-    public void setEngagementRate(double engagementRate) {
-        this.engagementRate = engagementRate;
+    public void setSocialMediaProfile(SocialMediaProfile socialMediaProfile) {
+        this.socialMediaProfile = socialMediaProfile;
     }
+
+    public List<Campaign> getCampaigns() {
+        return campaigns;
+    }
+
+    public void setCampaigns(List<Campaign> campaigns) {
+        this.campaigns = campaigns;
+    }
+
+    // Helper methods for bidirectional relationships
+    public void addApplication(CampaignApplication application) {
+        applications.add(application);
+        application.setInfluencer(this);
+    }
+
+    public void removeApplication(CampaignApplication application) {
+        applications.remove(application);
+        application.setInfluencer(null);
+    }
+
+    public void addNiche(Niche niche) {
+        if (!niches.contains(niche)) {
+            niches.add(niche);
+            niche.getFollowingInfluencers().add(this);
+        }
+    }
+
+    public void removeNiche(Niche niche) {
+        if (niches.contains(niche)) {
+            niches.remove(niche);
+            niche.getFollowingInfluencers().remove(this);
+        }
+    }
+
+    public void addCampaign(Campaign campaign) {
+        if (!campaigns.contains(campaign)) {
+            campaigns.add(campaign);
+            campaign.getInfluencers().add(this);
+        }
+    }
+
+    public void removeCampaign(Campaign campaign) {
+        if (campaigns.contains(campaign)) {
+            campaigns.remove(campaign);
+            campaign.getInfluencers().remove(this);
+        }
+    }
+
 }
