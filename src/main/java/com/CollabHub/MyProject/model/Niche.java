@@ -10,7 +10,7 @@ public class Niche {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "niche_id")
-    private long id;
+    private Long id;
     private String name;
     private String description;
 
@@ -20,15 +20,23 @@ public class Niche {
     inverseJoinColumns = @JoinColumn(name = "influencer_id"))
     private List<Influencer> influencers;
 
-    public long id() {
+    public Niche(){}
+
+    public Niche(String name, String description, List<Influencer> influencers) {
+        this.name = name;
+        this.description = description;
+        this.influencers = influencers;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String name() {
+    public String getName() {
         return name;
     }
 
@@ -36,7 +44,7 @@ public class Niche {
         this.name = name;
     }
 
-    public String description() {
+    public String getDescription() {
         return description;
     }
 
@@ -44,7 +52,7 @@ public class Niche {
         this.description = description;
     }
 
-    public List<Influencer> influencers() {
+    public List<Influencer> getInfluencers() {
         return influencers;
     }
 

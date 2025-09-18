@@ -1,7 +1,10 @@
 package com.CollabHub.MyProject.model;
 
 import jakarta.persistence.*;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,15 +15,17 @@ public class Campaign {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "campaign_id")
-    private long id;
+    private Long id;
 
     private String title;
     private String description;
     private double budget;
 
-    @Temporal(TemporalType.DATE)
-    private Date applicationDeadline;
+    @Column(name = "application_deadline")
+    private LocalDateTime applicationDeadline;
 
+    private String preferredNiche;
+    private String preferredSocialMediaPlatform;
 
     @ManyToOne(fetch=FetchType.LAZY)//unless i want to access brandprofile explicitly it wont load this data
     @JoinColumn(name = "brand_id",nullable = false)
@@ -30,21 +35,35 @@ public class Campaign {
     @JoinTable(name = "influencer_campaign"
     ,joinColumns = @JoinColumn(name = "campaign_id")
     ,inverseJoinColumns = @JoinColumn(name = "influencer_id"))
-    private List<Influencer> influencers;
+    private List<Influencer> interestedInfluencers = new ArrayList<>();
 
     @OneToMany(mappedBy = "campaign", cascade = CascadeType.ALL)
-    private List<CampaignApplication> applications;
+    private List<CampaignApplication> applications = new ArrayList<>();
+
+    public Campaign(){}
 
 
-    public long id() {
+    public Campaign(String title, String description, double budget, LocalDateTime applicationDeadline, String preferredNiche, String preferredSocialMediaPlatform, BrandProfile brandProfile, List<Influencer> interestedInfluencers, List<CampaignApplication> applications) {
+        this.title = title;
+        this.description = description;
+        this.budget = budget;
+        this.applicationDeadline = applicationDeadline;
+        this.preferredNiche = preferredNiche;
+        this.preferredSocialMediaPlatform = preferredSocialMediaPlatform;
+        this.brandProfile = brandProfile;
+        this.interestedInfluencers = interestedInfluencers;
+        this.applications = applications;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String title() {
+    public String getTitle() {
         return title;
     }
 
@@ -52,7 +71,7 @@ public class Campaign {
         this.title = title;
     }
 
-    public String description() {
+    public String getDescription() {
         return description;
     }
 
@@ -60,7 +79,7 @@ public class Campaign {
         this.description = description;
     }
 
-    public double budget() {
+    public double getBudget() {
         return budget;
     }
 
@@ -68,15 +87,15 @@ public class Campaign {
         this.budget = budget;
     }
 
-    public Date applicationDeadline() {
+    public LocalDateTime getApplicationDeadline() {
         return applicationDeadline;
     }
 
-    public void setApplicationDeadline(Date applicationDeadline) {
+    public void setApplicationDeadline(LocalDateTime applicationDeadline) {
         this.applicationDeadline = applicationDeadline;
     }
 
-    public BrandProfile brandProfile() {
+    public BrandProfile getBrandProfile() {
         return brandProfile;
     }
 
@@ -84,4 +103,35 @@ public class Campaign {
         this.brandProfile = brandProfile;
     }
 
+    public String getPreferredNiche() {
+        return preferredNiche;
+    }
+
+    public void setPreferredNiche(String preferredNiche) {
+        this.preferredNiche = preferredNiche;
+    }
+
+    public String getPreferredSocialMediaPlatform() {
+        return preferredSocialMediaPlatform;
+    }
+
+    public void setPreferredSocialMediaPlatform(String preferredSocialMediaPlatform) {
+        this.preferredSocialMediaPlatform = preferredSocialMediaPlatform;
+    }
+
+    public List<Influencer> getInterestedInfluencers() {
+        return interestedInfluencers;
+    }
+
+    public void setInterestedInfluencers(List<Influencer> interestedInfluencers) {
+        this.interestedInfluencers = interestedInfluencers;
+    }
+
+    public List<CampaignApplication> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(List<CampaignApplication> applications) {
+        this.applications = applications;
+    }
 }

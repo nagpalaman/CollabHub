@@ -7,7 +7,10 @@ import jakarta.persistence.*;
 public class CampaignApplication {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private long id;
+    @Column(name = "application_id")
+    private Long id;
+
+    private String pitch;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "campaign_id",nullable = false)
@@ -20,16 +23,32 @@ public class CampaignApplication {
     @Enumerated(EnumType.STRING)
     private ApplicationStatus applicationStatus;
 
+    public CampaignApplication(){}
 
-    public long id() {
+    public CampaignApplication(String pitch, Campaign campaign, Influencer influencer, ApplicationStatus applicationStatus) {
+        this.pitch = pitch;
+        this.campaign = campaign;
+        this.influencer = influencer;
+        this.applicationStatus = applicationStatus;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Campaign campaign() {
+    public String getPitch() {
+        return pitch;
+    }
+
+    public void setPitch(String pitch) {
+        this.pitch = pitch;
+    }
+
+    public Campaign getCampaign() {
         return campaign;
     }
 
@@ -37,7 +56,7 @@ public class CampaignApplication {
         this.campaign = campaign;
     }
 
-    public Influencer influencer() {
+    public Influencer getInfluencer() {
         return influencer;
     }
 
@@ -45,7 +64,7 @@ public class CampaignApplication {
         this.influencer = influencer;
     }
 
-    public ApplicationStatus applicationStatus() {
+    public ApplicationStatus getApplicationStatus() {
         return applicationStatus;
     }
 

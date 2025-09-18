@@ -23,19 +23,29 @@ public class Influencer{
     @ManyToMany(mappedBy = "influencers")
     private List<Niche> niches = new ArrayList<>();
 
-    @OneToOne(mappedBy = "influencer")
-    private SocialMediaProfile socialMediaProfile;
+    @OneToMany(mappedBy = "influencer")
+    private List<SocialMediaProfile> socialMediaProfiles = new ArrayList<>();
 
     @ManyToMany(mappedBy = "followingInfluencers")
-    private List<Campaign> campaigns = new ArrayList<>();
+    private List<BrandProfile> followerBrands = new ArrayList<>();
 
-    public Influencer() {}
+    @ManyToMany(mappedBy = "interestedInfluencers")
+    private List<Campaign> interestedCampaigns = new ArrayList<>();
 
-    public Influencer(User user) {
-        this.user = user;
+    public Influencer(){
     }
 
-    // Getters and Setters
+    public Influencer(User user, List<CampaignApplication> applications, List<Niche> niches,
+                      List<SocialMediaProfile> socialMediaProfiles, List<BrandProfile> followerBrands,
+                      List<Campaign> interestedCampaigns) {
+        this.user = user;
+        this.applications = applications;
+        this.niches = niches;
+        this.socialMediaProfiles = socialMediaProfiles;
+        this.followerBrands = followerBrands;
+        this.interestedCampaigns = interestedCampaigns;
+    }
+
     public Long getId() {
         return id;
     }
@@ -68,59 +78,29 @@ public class Influencer{
         this.niches = niches;
     }
 
-    public SocialMediaProfile getSocialMediaProfile() {
-        return socialMediaProfile;
+    public List<SocialMediaProfile> getSocialMediaProfile() {
+        return socialMediaProfiles;
     }
 
-    public void setSocialMediaProfile(SocialMediaProfile socialMediaProfile) {
-        this.socialMediaProfile = socialMediaProfile;
+    public void setSocialMediaProfile(List<SocialMediaProfile> socialMediaProfiles) {
+        this.socialMediaProfiles = socialMediaProfiles;
     }
 
-    public List<Campaign> getCampaigns() {
-        return campaigns;
+    public List<BrandProfile> getFollowerBrands() {
+        return followerBrands;
     }
 
-    public void setCampaigns(List<Campaign> campaigns) {
-        this.campaigns = campaigns;
+    public void setFollowerBrands(List<BrandProfile> followerBrands) {
+        this.followerBrands = followerBrands;
     }
 
-    // Helper methods for bidirectional relationships
-    public void addApplication(CampaignApplication application) {
-        applications.add(application);
-        application.setInfluencer(this);
+    public List<Campaign> getCampaignList() {
+        return interestedCampaigns;
     }
 
-    public void removeApplication(CampaignApplication application) {
-        applications.remove(application);
-        application.setInfluencer(null);
+    public void setCampaignList(List<Campaign> interestedCampaigns) {
+        this.interestedCampaigns = interestedCampaigns;
     }
 
-    public void addNiche(Niche niche) {
-        if (!niches.contains(niche)) {
-            niches.add(niche);
-            niche.getFollowingInfluencers().add(this);
-        }
-    }
-
-    public void removeNiche(Niche niche) {
-        if (niches.contains(niche)) {
-            niches.remove(niche);
-            niche.getFollowingInfluencers().remove(this);
-        }
-    }
-
-    public void addCampaign(Campaign campaign) {
-        if (!campaigns.contains(campaign)) {
-            campaigns.add(campaign);
-            campaign.getInfluencers().add(this);
-        }
-    }
-
-    public void removeCampaign(Campaign campaign) {
-        if (campaigns.contains(campaign)) {
-            campaigns.remove(campaign);
-            campaign.getInfluencers().remove(this);
-        }
-    }
 
 }

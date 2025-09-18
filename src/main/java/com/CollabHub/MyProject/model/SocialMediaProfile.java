@@ -8,22 +8,34 @@ public class SocialMediaProfile {
     @Id
     @Column(name = "social_media_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "influencer_id")
     private Influencer influencer;
 
     private String platform;
     private String handle;
-    private int folowersCount;
+    private int followersCount;
     private String profileUrl;
+    private double engagementRate;
 
-    public long id() {
+    public SocialMediaProfile(){}
+
+    public SocialMediaProfile(Influencer influencer, String platform, String handle, int followersCount, String profileUrl, double engagementRate) {
+        this.influencer = influencer;
+        this.platform = platform;
+        this.handle = handle;
+        this.followersCount = followersCount;
+        this.profileUrl = profileUrl;
+        this.engagementRate = engagementRate;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -51,12 +63,12 @@ public class SocialMediaProfile {
         this.handle = handle;
     }
 
-    public int folowersCount() {
-        return folowersCount;
+    public int followersCount() {
+        return followersCount;
     }
 
-    public void setFolowersCount(int folowersCount) {
-        this.folowersCount = folowersCount;
+    public void setFollowersCount(int folowersCount) {
+        this.followersCount = folowersCount;
     }
 
     public String profileUrl() {
@@ -65,5 +77,13 @@ public class SocialMediaProfile {
 
     public void setProfileUrl(String profileUrl) {
         this.profileUrl = profileUrl;
+    }
+
+    public double engagementRate() {
+        return engagementRate;
+    }
+
+    public void setEngagementRate(double engagementRate) {
+        this.engagementRate = engagementRate;
     }
 }

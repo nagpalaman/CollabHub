@@ -22,7 +22,6 @@ public class BrandProfile {
     private String companyWebsite;
     private String description;
 
-
     @OneToMany(mappedBy = "brandProfile", cascade = CascadeType.ALL)
     private List<Campaign> campaigns;
 
